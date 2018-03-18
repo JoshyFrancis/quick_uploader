@@ -9,3 +9,5 @@ JavaScript Multiple file up-loader with resume support.
 * Supports File Chunks
 
 Now only supports PHP on server side.
+
+<img src="quick_uploader_preview.png">
