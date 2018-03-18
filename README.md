@@ -1,7 +1,7 @@
 # quick_uploader
 JavaScript Multiple file up-loader with resume support.
 
-#Features
+# Features
 * Pure Javascript No Dependencies
 * Supports Drag Drop
 * Supports Directory Reading
