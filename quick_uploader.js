@@ -442,7 +442,7 @@
 															  }
 															  if(file_info[index].percent!=percent_done){
 																	 
-																	rem_time.innerHTML = 'uploaded : ' + formatBytes(  ((chunk-1)*chunk_size),2) + '@' + formatBytes(chunk_size,2)   + ' '   + time_to_human_readable(time_rem,' remaining') ;
+																	rem_time.innerHTML = time_to_human_readable(time_rem,' remaining.')  +   ' uploaded : ' + formatBytes(  ((chunk-1)*chunk_size),2) + '@' + formatBytes(chunk_size,2)  ;
 																	file_info[index].percent=percent_done;
 															 }
 																
