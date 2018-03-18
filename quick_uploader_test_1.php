@@ -1,4 +1,8 @@
 <?php
+		/* 				All Thanks and Praise to My Lord Jesus Christ
+		  * 				All Thanks and Praise to My Lord Jesus Christ
+		  * 				All Thanks and Praise to My Lord Jesus Christ
+	  */
 error_reporting(E_ALL);
 			function is_dir_empty1($dir) {
 			  $handle = opendir($dir);
@@ -33,7 +37,7 @@ error_reporting(E_ALL);
 			switch ($_REQUEST['head']) {
 				case 'upload':
 				// Very Very Important  in linux
-				// chmod 0777 /var/www/demo.cloudoux.com/public/cloudoux_hub/file_upload
+				// chmod 0777 /var/www/domain/public/file_upload
 				
 					$filedata=$_REQUEST['data'];
 					$filename=urldecode( $_REQUEST['file']);
