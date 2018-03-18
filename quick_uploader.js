@@ -441,7 +441,8 @@
 																
 															  }
 															  if(file_info[index].percent!=percent_done){
-																	rem_time.innerHTML = time_to_human_readable(time_rem,' remaining') ;
+																	 
+																	rem_time.innerHTML = 'uploaded : ' + formatBytes(  ((chunk-1)*chunk_size),2) + '@' + formatBytes(chunk_size,2)   + ' '   + time_to_human_readable(time_rem,' remaining') ;
 																	file_info[index].percent=percent_done;
 															 }
 																
@@ -491,6 +492,7 @@
 									pause.parentNode.removeChild(pause);
 							}
 						localStorage.removeItem(file_info[index].key);
+						rem_time.innerHTML = 'uploaded : ' + formatBytes(   size ,2) + '@' + formatBytes(chunk_size,2)     ;
 						
 						//// file_info.splice(index,1);
 						 
