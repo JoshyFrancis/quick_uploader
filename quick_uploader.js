@@ -12,7 +12,7 @@
 				* Supports Resume
 				* Supports File Chunks
 		*/
-	 function quick_uploader(el,url){
+	 function quick_uploader(el,url,g_chunk_size){
 				function ajax(o) {
 					var url=o.url;
 					var type=( o.type || 'post').toUpperCase();
@@ -121,6 +121,10 @@
 				var __bind = function(me,fn ){ return function(){ return fn.apply(me, arguments); }; };
 				var ajax_begin=false;
 				function add_file(f){
+							if(file_info.length==0){
+								total_size=0;
+								uploaded_size=0;
+							}
 					var index=0;
 					var id=escape(f.name)+ '_' + escape(f.type)+ '_' +  f.size + '_' + f.lastModified;
 								if(get_index(id)!=-1){
@@ -132,22 +136,26 @@
 								});
 							index=file_info.length-1;
 							
-					var li_c=document.getElementById('pause'+ id );
-						if(li_c){
-							li_c=li_c.parentNode;
-							li_c.parentNode.removeChild(li_c);	
-						}
+					 var li=document.getElementById('li_'+ id );
+							if(li){										 
+								li.parentNode.removeChild(li);	
+							}
 							
 								output = [];
 					var li=document.createElement('li');
+						li.style.cssText='width:100%;';
+						li.id='li_'+id;
 					  output.push(' <strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
 								  formatBytes(f.size,2), ', last modified: ',
 								  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-								//  '<div class="progress_bar loading" ><div id="progress_bar'+(index)+'" class="percent">0%</div></div>',
-								'	<div style="width:100%; height:20px; border:1px solid black;text-align: center; "> <div id="progress_bar'+ id +'" style="width:0%;  background-color: #99ccff;   height:100%;">  </div></div>',
+								 '<div >',
+									'<div style="width:calc(100% - 30%); height:20px; border:1px solid black;text-align: center; display:inline-block;  "> ',
+										'<div id="progress_bar'+ id +'" style="width:0%;  background-color: #99ccff;   height:100%;  ">  </div>',
+									'</div>',
+								'<button style="float: right;"  id="pause'+ id +'" >Pause</button>',
+								'<button style="float: right;"    id="remove'+ id +'" >Remove</button>',									
+								'</div>',
 								'<div  id="rem_time'+ id +'" ></div>',
-								'<button  id="pause'+ id +'" >Pause</button>',
-								'<button  id="remove'+ id +'" >Remove</button>',
 								  ' ');
 							li.innerHTML=output.join('')  ;
 							list.appendChild(li);  
@@ -245,6 +253,7 @@
 				 	var index=-1;
 							index=get_index(id);
 					if(index==-1){return false;}
+							file_info[index].stop=false;
 								if(ajax_begin==true){
 										file_info[index].stop=true;
 										setTimeout(function(){
@@ -253,10 +262,13 @@
 										return false;
 								}		
 							if(!confirm('Remove this file?')){
+								
 									return false;
 							}								
 							file_info[index].paused=true;
 							upload(file_info[index].id );
+							var pause=document.getElementById('pause'+id);
+								pause.innerHTML='Resume';
 						ajax({
 								url:  url,
 								type: 'POST',
@@ -274,11 +286,10 @@
 													uploaded_size-=file_info[index].file.size;
 													total_size-=file_info[index].file.size;	
 												file_info.splice(index,1);
-											 // remove.parentNode.removeChild(pause);
-											 var li_c=document.getElementById('remove'+ id );
-											if(li_c){
-												li_c=li_c.parentNode;
-												li_c.parentNode.removeChild(li_c);	
+											  
+											 var li=document.getElementById('li_'+ id );
+											if(li){										 
+												li.parentNode.removeChild(li);	
 											}
 												 if(total_size>0){
 													 var percent_done=Math.floor( ( uploaded_size / total_size ) * 100 );																								
@@ -337,7 +348,7 @@
 								}
 							};
 							if(file_info[index].paused==true){
-								this.innerHTML='Resume';
+								pause.innerHTML='Resume';
 							}
 						}
 						if(remove){
@@ -348,7 +359,7 @@
 							};
 						 
 						}
-					var chunk_size=524288 ;//1048576;//		524288=512 KB	1048576=1 MB
+					var chunk_size=g_chunk_size!==undefined && !isNaN(parseInt(g_chunk_size)) ?g_chunk_size:  524288;//1048576;//		524288=512 KB	1048576=1 MB
 					var num_chunks = Math.max(Math.ceil(size / chunk_size), 1);
 					var key="quick_uploader_" + pagename + "_" + id;//escape(fname);
 					
@@ -484,8 +495,7 @@
 
 					}else{
 						file_info[index].finished=true;
-						total_size-=file.size;
-						
+						 
 						progress.style.width = 100 + '%';
 						progress.innerHTML = 100 + '%';
 							if(pause){
@@ -496,7 +506,7 @@
 						
 						//// file_info.splice(index,1);
 						 
-						 if(total_size>0){
+						 if(file_info.length>0){
 							 var percent_done=Math.floor( ( uploaded_size / total_size ) * 100 );
 															
 							if (percent_done < 100) {		 
@@ -505,9 +515,11 @@
 							}
 						}else{
 							uploaded_size=0;
+							total_size=0;
 								main_progress.style.width = 100 + '%';
 								main_progress.innerHTML = 100 + '%';
 						}
+						
 					}
 				 }
 				
