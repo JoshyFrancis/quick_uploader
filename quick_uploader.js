@@ -262,13 +262,12 @@
 										return false;
 								}		
 							if(!confirm('Remove this file?')){
-								
+								upload(file_info[index].id );
 									return false;
 							}								
 							file_info[index].paused=true;
 							upload(file_info[index].id );
-							var pause=document.getElementById('pause'+id);
-								pause.innerHTML='Resume';
+							 
 						ajax({
 								url:  url,
 								type: 'POST',
